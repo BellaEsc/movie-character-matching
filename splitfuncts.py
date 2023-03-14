@@ -63,3 +63,47 @@ def file_to_df(filename):
     movie_dict = script_to_dict(movie_script)
     movie_df = movie_dict_to_df(movie_dict, filename[:-4])
     return movie_df
+
+'''
+
+def movie_file_to_df(filename):
+    path = os.path.join(os.path.abspath(''), 'moviescripts', filename)
+    script_file = open(path)
+    script = script_file.read()
+    script_file.close()
+
+    pars = re.split(r'\n\n+', script, maxsplit=0)
+    movie_dict = {}
+
+    for p in pars:
+        # Capture the name (anchored to the beginning of line and all capitals)
+        # and the rest of the paragraph - (.*)
+        regex = re.search(r'^([A-Z]+ [A-Z]+|[A-Z]+)(.*)', p, re.S + re.M)
+
+        if not regex:  # Avoid calling group() on null results
+            continue
+
+        name, txt = regex.group(1, 2) 
+
+        # Each sentence as a list item
+        if name in movie_dict:
+            movie_dict[name] += txt.strip().split('\n')
+        else:
+            movie_dict[name] = txt.strip().split('\n')
+    
+    for key in movie_dict:
+        movie_dict[key] = ' '.join(movie_dict[key])
+    
+    char_names = movie_dict.keys()
+    movie_df = pd.DataFrame(movie_dict, index = [0])
+    movie_df['movie_name'] = filename[:-4]
+    movie_df2 = movie_df.melt(id_vars = 'movie_name', 
+                              value_vars = char_names,
+                              var_name = 'character_name',
+                              value_name = 'lines')
+    movie_df2['lines_len'] = movie_df2['lines'].apply(len)
+
+    movie_df3 = movie_df2.sort_values('lines_len', ascending = False).reset_index(drop=True)
+    return movie_df3
+    
+'''
