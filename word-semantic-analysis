@@ -11,7 +11,7 @@ from gensim.models import Word2Vec as w2v
 from sklearn.decomposition import PCA
 
 # constants
-PATH = 'data/megamind.txt'
+PATH = 'data/megamind.txt' # [figure out way to do a bunch of different scripts at once]
 sw = stopwords.words('english')
 plt.style.use('ggplot')
 # nltk.download('punkt')
