@@ -7,9 +7,10 @@ def read_script(filename):
     ''' takes the script's filename
     and outputs it as a string'''
     path = os.path.join(os.path.abspath(''), 'moviescripts', filename)
-    script_file = open(path)
-    script = script_file.read()
-    script_file.close()
+
+    with open(path) as file:
+        script = file.read()
+
     return script
 
 
@@ -65,3 +66,19 @@ def file_to_df(filename):
     movie_dict = script_to_dict(movie_script)
     movie_df = movie_dict_to_df(movie_dict, filename[:-4])
     return movie_df
+
+
+def movies_to_df(movie_folder):
+    '''Takes the name of the movie folder as a string
+    and outputs a dataframe with all of the movies' top 7
+    speakers, their lines, and the movie they came from.'''
+    all_movies = os.listdir(movie_folder)
+    movies = []
+
+    for movie in all_movies:
+        movie_df = file_to_df(movie)
+        movies.append(movie_df.head(7))
+    
+    movies_df = pd.concat(movies)
+
+    return movies_df
