@@ -5,7 +5,7 @@ import pandas as pd
 
 def read_script(filename):
     ''' takes the script's filename
-    and outputs it as a string'''
+    and outputs it as a string '''
     path = os.path.join(os.path.abspath(''), 'moviescripts', filename)
 
     with open(path) as file:
@@ -33,30 +33,31 @@ def script_to_dict(script):
 
         # Each sentence as a list item
         if name in d:
-            d[name] += txt.strip().split('\n')
+            d[name].append(txt.strip().replace('\n', ' '))
         else:
-            d[name] = txt.strip().split('\n')
-    
-    for key in d:
-        d[key] = ' '.join(d[key])
+            d[name] = [txt.strip().replace('\n', ' ')]
     
     return d
 
 
 def movie_dict_to_df(movie_dict, movie_name):
     ''' Takes the movie dictionary and the name of the movie
-    and turns it into a properly formatted dataframe.'''
-    char_names = movie_dict.keys()
-    movie_df = pd.DataFrame(movie_dict, index = [0])
-    movie_df['movie_name'] = movie_name
-    movie_df2 = movie_df.melt(id_vars = 'movie_name', 
-                              value_vars = char_names,
-                              var_name = 'character_name',
-                              value_name = 'lines')
-    movie_df2['lines_len'] = movie_df2['lines'].apply(len)
+    and turns it into a properly formatted dataframe. Only 
+    contains speakers with >100 lines.'''
+    df = pd.DataFrame.from_dict(movie_dict, orient='index').stack().reset_index()
+    df.columns = ['character_name', 'line_num', 'line']
 
-    movie_df3 = movie_df2.sort_values('lines_len', ascending = False).reset_index(drop=True)
-    return movie_df3
+    df2 = df[(df['character_name'].str.len() > 1)].copy(deep=True)
+    df2['line'] = df2['line'].str.lower()
+    df2['character_name'] = df2['character_name'].str.title()
+
+    movie_name_format = movie_name.replace('_', ' ').title()
+
+    counts = df2['character_name'].value_counts()
+    filtered_df = df2[df2['character_name'].isin(counts[counts > 100].index)]
+    filtered_df.insert(0, 'movie', movie_name_format)
+
+    return filtered_df
 
 
 def file_to_df(filename):
@@ -64,11 +65,8 @@ def file_to_df(filename):
     and turns it into a properly formatted dataframe.'''
     movie_script = read_script(filename)
     movie_dict = script_to_dict(movie_script)
-    movie_df_pre = movie_dict_to_df(movie_dict, filename[:-4])
+    movie_df = movie_dict_to_df(movie_dict, filename[:-4])
 
-    # Make necessary transformations
-    movie_df = movie_df_pre[movie_df_pre['character_name'].str.len() > 1]
-    movie_df['lines'] = movie_df['lines'].str.lower()
     return movie_df
 
 
@@ -81,7 +79,7 @@ def movies_to_df(movie_folder):
 
     for movie in all_movies:
         movie_df = file_to_df(movie)
-        movies.append(movie_df.head(5))
+        movies.append(movie_df)
     
     movies_df = pd.concat(movies)
 
