@@ -64,7 +64,8 @@ def file_to_df(filename):
     and turns it into a properly formatted dataframe.'''
     movie_script = read_script(filename)
     movie_dict = script_to_dict(movie_script)
-    movie_df = movie_dict_to_df(movie_dict, filename[:-4])
+    movie_df_pre = movie_dict_to_df(movie_dict, filename[:-4])
+    movie_df = movie_df_pre[movie_df_pre['character_name'].str.len() > 1]
     return movie_df
 
 
