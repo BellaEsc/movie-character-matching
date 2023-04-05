@@ -65,7 +65,10 @@ def file_to_df(filename):
     movie_script = read_script(filename)
     movie_dict = script_to_dict(movie_script)
     movie_df_pre = movie_dict_to_df(movie_dict, filename[:-4])
+
+    # Make necessary transformations
     movie_df = movie_df_pre[movie_df_pre['character_name'].str.len() > 1]
+    movie_df['lines'] = movie_df['lines'].str.lower()
     return movie_df
 
 
@@ -78,7 +81,7 @@ def movies_to_df(movie_folder):
 
     for movie in all_movies:
         movie_df = file_to_df(movie)
-        movies.append(movie_df.head(7))
+        movies.append(movie_df.head(5))
     
     movies_df = pd.concat(movies)
 
