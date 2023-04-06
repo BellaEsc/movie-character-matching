@@ -5,7 +5,7 @@ import pandas as pd
 
 def read_script(filename):
     ''' takes the script's filename
-    and outputs it as a string '''
+    and outputs the script as a string '''
     path = os.path.join(os.path.abspath(''), 'moviescripts', filename)
 
     with open(path) as file:
