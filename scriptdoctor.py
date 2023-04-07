@@ -36,7 +36,8 @@ def del_parenthesis(script):
 
 
 def del_spacing(script):
-    pattern = re.compile(r'([A-Z]+\s.*)(?:\n{2,})')
+    pattern = re.compile(r'(\n[A-Z]{2,}.*)(?:\n{2,})')
+    #pattern = re.compile(r'([A-Z]+\s.*)(?:\n{2,})')
     new_script = pattern.sub(r'\1\n', script)
     
     return new_script
@@ -54,5 +55,15 @@ def update_script(filename, newscript):
 
     return
 
+def replace_name(script, original_name, replacement_name):
+    original = original_name.upper()
+    replacement = replacement_name.upper()
+    return script.replace(original, replacement)
 
 
+def update_scripts(script_dict):
+    '''Updates all of the scripts in the
+    dictionary with the modified scripts'''
+    for key, value in script_dict:
+        update_script(key, value)
+    return

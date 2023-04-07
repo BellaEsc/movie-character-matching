@@ -14,9 +14,14 @@ def read_script(filename):
     return script
 
 
+def del_parenthesis(sentence):
+    return re.sub(r'\([^)]*\)', '', sentence)
+
+
 def script_to_dict(script):
     ''' Takes in a script (string object) and outputs
     a dictionary with each character and their spoken lines '''
+    script = del_parenthesis(script)
 
     pars = re.split(r'\n\n+', script, maxsplit=0)
     d = {}
@@ -39,8 +44,6 @@ def script_to_dict(script):
     
     return d
 
-def del_parenthesis(sentence):
-    return re.sub(r'\([^)]*\)', '', sentence)
 
 
 def movie_dict_to_df(movie_dict, movie_name):
