@@ -39,6 +39,9 @@ def script_to_dict(script):
     
     return d
 
+def del_parenthesis(sentence):
+    return re.sub(r'\([^)]*\)', '', sentence)
+
 
 def movie_dict_to_df(movie_dict, movie_name):
     ''' Takes the movie dictionary and the name of the movie
@@ -57,7 +60,10 @@ def movie_dict_to_df(movie_dict, movie_name):
     filtered_df = df2[df2['character_name'].isin(counts[counts > 100].index)]
     filtered_df.insert(0, 'movie', movie_name_format)
 
-    return filtered_df
+    final_df = filtered_df.copy(deep=True)
+    final_df['line'] = filtered_df['line'].copy(deep=True).apply(del_parenthesis)
+
+    return final_df
 
 
 def file_to_df(filename):
