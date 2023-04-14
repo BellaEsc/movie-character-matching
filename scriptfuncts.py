@@ -1,6 +1,7 @@
 import re
 import os
 import pandas as pd
+import string
 
 
 def read_script(filename):
@@ -93,3 +94,11 @@ def movies_to_df(movie_folder):
     movies_df = pd.concat(movies)
 
     return movies_df
+
+
+def process_text(text):
+    text = re.sub(
+        f"[{re.escape(string.punctuation)}]", " ", text
+    )
+    text = " ".join(text.split())
+    return text
