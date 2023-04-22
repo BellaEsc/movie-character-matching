@@ -13,7 +13,7 @@ The movie dataframe used in our project has been created from the movie scripts 
 ### Codebook for moviedata.csv
 There are 4 columns in the csv file:
 
-`movie`: Gives (an abbreviated version of) the name of the movie that the character is from.
+`movie`: Gives the name of the movie that the character is from.
 
 `character_name`: Gives the name of the movie character.
 
