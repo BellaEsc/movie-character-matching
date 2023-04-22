@@ -24,7 +24,6 @@ There are 4 columns in the csv file:
 ## Models
 We tested with two different models: support vector machines (SVM) and multi-layer perceptrons (MLP). We also tested using unigrams only against a combination of unigrams and bigrams. After tuning and testing the models on testing data, the f1 scores were as follows:
 
-|---|---|---|
 | | Unigrams Only | Unigrams and Bigrams |
 |---|---| --- |
 |**SVM** | 0.524 | 0.532 |
